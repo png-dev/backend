@@ -1,0 +1,350 @@
+swagger: "2.0"
+info:
+  description: 'API account'
+  version: "1.0.0"
+  title: "API"
+  contact:
+    email: "dev.vn.png@gmail.com"
+
+host: "127.0.0.1:8080"
+basePath: "/v1"
+tags:
+- name: "authentication"
+  description: "Everything about authentication"
+  externalDocs:
+    description: "Find out more"
+    url: "http://swagger.io"
+- name: "account"
+  description: "Everything about account"
+  externalDocs:
+    description: "Find out more"
+    url: "http://swagger.io"
+- name: "user"
+  description: "Everything about user"
+  externalDocs:
+    description: "Find out more"
+    url: "http://swagger.io"
+schemes:
+- "http"
+- "https"
+paths:
+  /accounts:
+    get:
+      tags:
+      - "account"
+      summary: "get account list"
+      description: ""
+      operationId: "get_account_list"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "_size"
+        in: "query"
+        description: "Số lượng bản ghi muốn lấy ra"
+        required: false
+        minimum: 1
+        type: "integer"
+      - name: "_from"
+        in: "query"
+        description: "Vị trí bắt đầu lấy bản ghi"
+        required: false
+        type: "integer"
+      - name: "_counting"
+        in: "query"
+        description: "Có muốn đếm tổng số bản ghi trong Database phù hợp không. _counting=true nếu muốn."
+        required: false
+        type: "boolean"
+      - name: "_sort"
+        in: "query"
+        type: "string"
+        description: "Các trường muốn sort. Ví dụ: sort theo trường 'a' asc và 'b' desc: _sort=a,-b"
+      - name: "name"
+        in: "query"
+        description: "Điều kiện tìm kiếm theo firstname"
+        type: "string"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/ApiGetResponse"
+        400:
+          description: "Error for client issues"
+          schema:
+            $ref: "#/definitions/ApiErrorResponse"
+        500:
+          description: "Error for server issues"
+          schema:
+            $ref: "#/definitions/ApiErrorResponse"
+      x-swagger-router-controller: "application.controllers.account_controller"
+    post:
+      tags:
+      - "account"
+      summary: "create one account"
+      description: ""
+      operationId: "create_one_account"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: person
+        in: body
+        description: Person to create
+        required: True
+        schema:
+          type: object
+          required:
+            - account_number
+          properties:
+            account_number:
+              type: integer
+              description: account number
+            firstname:
+              type: string
+              pattern: "^[a-zA-Z']+( [a-zA-Z']+){0,2}$"
+              description: First name
+            lastname:
+              type: string
+              pattern: "[a-zA-Z]+( [a-zA-Z]+){0,2}$"
+              description: Last name
+            gender:
+              description: gender
+              type: string
+              enum: [F, M]
+            age:
+              type: integer
+              minimum: 18
+              maximum: 60
+              description: age
+            email:
+              type: string
+              format: email
+              description: email
+            address:
+              type: string
+              pattern: "^[a-zA-Z0-9-]+([, ][a-zA-Z0-9]+){0,2}$"
+              description: address
+            city:
+              type: string
+              pattern: "^[a-zA-Z]+( [a-zA-Z]+){0,2}$"
+              description: city
+            state:
+              description: state
+              type: string
+              enum: [AL,AK,AZ,AR,CA,CO,CT,
+                 DE,DC,FL,GA,HI,ID,IL,IN,IA,
+                 KS,KY,LA,ME,MD,MA,MI,MN,MS,
+                 MO,MT,NE,NV,NH,NJ,NM,NY,NC,
+                 ND,OH,OK,OR,PA,RI,SC,SD,TN,
+                 TX,UT,VT,VA,WA,WV,WI,WY]
+            employer:
+              type: string
+              pattern: "^[a-zA-Z]+( [a-zA-Z]+){0,3}$"
+              description: employer
+            balance:
+              type: integer
+              description: balance
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/ApiGetResponse"
+        400:
+          description: "Error for client issues"
+          schema:
+            $ref: "#/definitions/ApiErrorResponse"
+        500:
+          description: "Error for server issues"
+          schema:
+            $ref: "#/definitions/ApiErrorResponse"
+      x-swagger-router-controller: "application.controllers.account_controller"
+  /account/{account_number}:
+    get:
+      tags:
+      - "account"
+      summary: "get one account"
+      description: ""
+      operationId: "get_one_account"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "account_number"
+        in: "path"
+        description: "unique account number"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/ApiGetResponse"
+        400:
+          description: "Error for client issues"
+          schema:
+            $ref: "#/definitions/ApiErrorResponse"
+        500:
+          description: "Error for server issues"
+          schema:
+            $ref: "#/definitions/ApiErrorResponse"
+      x-swagger-router-controller: "application.controllers.account_controller"
+    put:
+      tags:
+      - "account"
+      summary: "update one account"
+      description: "update one account"
+      operationId: "update_one_account"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "account_number"
+        in: "path"
+        description: "unique account number"
+        required: true
+        type: "integer"
+      - name: person
+        in: body
+        description: Person to create
+        required: True
+        schema:
+          type: object
+          properties:
+            firstname:
+              type: string
+              description: First name
+            lastname:
+              type: string
+              description: Last name
+            gender:
+              type: string
+              description: gender
+            age:
+              type: integer
+              description: age
+            email:
+              type: string
+              description: email
+            address:
+              type: string
+              description: address
+            city:
+              type: string
+              description: city
+            state:
+              type: string
+              description: state
+            employer:
+              type: string
+              description: employer
+            balance:
+              type: integer
+              description: balance
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/ApiGetResponse"
+        400:
+          description: "Error for client issues"
+          schema:
+            $ref: "#/definitions/ApiErrorResponse"
+        500:
+          description: "Error for server issues"
+          schema:
+            $ref: "#/definitions/ApiErrorResponse"
+      x-swagger-router-controller: "application.controllers.account_controller"
+
+    delete:
+      tags:
+      - "account"
+      summary: "delete one account"
+      description: "delete one account"
+      operationId: "delete_one_account"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "account_number"
+        in: "path"
+        description: "unique account number"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "Success"
+          schema:
+            $ref: "#/definitions/ApiGetResponse"
+        400:
+          description: "Error for client issues"
+          schema:
+            $ref: "#/definitions/ApiErrorResponse"
+        500:
+          description: "Error for server issues"
+          schema:
+            $ref: "#/definitions/ApiErrorResponse"
+      x-swagger-router-controller: "application.controllers.account_controller"
+
+
+definitions:
+  ApiErrorResponse:
+    type: "object"
+    required:
+    - "status"
+    - "detail"
+    properties:
+      status:
+        type: "integer"
+        format: "int32"
+        example: 1000
+        description: "Mã lỗi"
+      detail:
+        type: "string"
+        example: "Invalid param"
+        description: "Thông tin lỗi"
+      title:
+        type: "string"
+        description: "Title lỗi"
+    xml:
+      name: "ApiErrorResponse"
+  ApiResponse:
+    type: "object"
+    properties:
+      status:
+        type: "integer"
+        format: "int32"
+      type:
+        type: "string"
+      detail:
+        type: "string"
+    example:
+      status: 0
+      type: "type"
+      detail: "message"
+  ApiGetResponse:
+    type: "object"
+    properties:
+      code:
+        type: "integer"
+        format: "int32"
+      data:
+        type: "array"
+        items:
+          type: "object"
+          properties: {}
+      count:
+        type: "integer"
+        format: "int32"
+    example:
+      code: 0
+      data:
+      - "{}"
+      - "{}"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"

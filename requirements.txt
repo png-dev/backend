@@ -1,0 +1,6 @@
+Werkzeug==1.0.1
+Flask-Cors==3.0.8
+Flask-PyMongo==2.3.0
+Flask-JWT-Extended==3.24.1
+PyYAML==5.3.1
+connexion[swagger-ui]

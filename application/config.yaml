@@ -1,0 +1,6 @@
+HOST: 0.0.0.0
+PORT: 8080
+SWAGGER_FILE_PATH: swagger/swagger.yaml
+LOGGER_CONFIG_PATH: logger.conf
+MONGO_URI: mongodb://127.0.0.1:27017/bank
+
